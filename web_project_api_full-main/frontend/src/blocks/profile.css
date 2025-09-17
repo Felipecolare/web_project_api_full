@@ -79,6 +79,10 @@
   margin: 0;
   font-size: 18px;
   font-weight: 400;
+  max-width: 373px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .profile__button-add {

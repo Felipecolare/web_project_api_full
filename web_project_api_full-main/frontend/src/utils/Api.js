@@ -27,7 +27,7 @@ class Api {
           return res.json();
         }
       })
-      .catch((err) => console.error(`Error: ${res.status}`));
+      .catch((err) => console.error(`Error: ${err.message}`));
     // .catch((err) => console.error(`Error: ${err.getMessage()}`));
   }
 

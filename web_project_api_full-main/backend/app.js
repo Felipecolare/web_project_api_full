@@ -6,6 +6,7 @@ const cardsRouter = require("./routes/cards");
 const { login, createUser } = require("./controllers/user");
 const cors = require("cors");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
+const NotFoundError = require("./errors/notFoundError");
 
 const mongoose = require("mongoose");
 const errorHandler = require("./middlewares/errorHandler");
@@ -39,7 +40,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("*", (req, res) => {
-  return res.status(404).send({ message: "A solicitação não foi encontrada" });
+  return res.status(new NotFoundError().statusCode).send({ message: "A solicitação não foi encontrada" });
 });
 
 app.use(errorLogger);

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const NotFoundError = require("../errors/notFoundError");
 const BadRequest = require("../errors/badRequest");
 const UnauthorizedError = require("../errors/unauthorizedError");
+const InternalServerError = require("../errors/internalServerError");
 require("dotenv").config();
 
 const { JWT_SECRET } = process.env;
@@ -27,7 +28,12 @@ function createUser(req, res) {
       })
     )
     .then((user) => res.status(201).json(user))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.statusCode) {
+        return res.status(err.statusCode).send({ message: err.message });
+      }
+      return res.status(new InternalServerError().statusCode).send({ message: err.message });
+    });
 }
 
 function login(req, res) {
@@ -56,7 +62,12 @@ function login(req, res) {
         return res.status(200).send({ token });
       });
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.statusCode) {
+        return res.status(err.statusCode).send({ message: err.message });
+      }
+      return res.status(new InternalServerError().statusCode).send({ message: err.message });
+    });
 }
 
 function getUserProfile(req, res) {
@@ -69,7 +80,12 @@ function getUserProfile(req, res) {
       }
       return res.status(200).json(users);
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.statusCode) {
+        return res.status(err.statusCode).send({ message: err.message });
+      }
+      return res.status(new InternalServerError().statusCode).send({ message: err.message });
+    });
 }
 
 function findUsers(req, res) {
@@ -80,7 +96,12 @@ function findUsers(req, res) {
       }
       return res.status(200).json(users);
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.statusCode) {
+        return res.status(err.statusCode).send({ message: err.message });
+      }
+      return res.status(new InternalServerError().statusCode).send({ message: err.message });
+    });
 }
 
 function updateUser(req, res) {
@@ -91,7 +112,12 @@ function updateUser(req, res) {
       throw new NotFoundError("Usuário não encontrado");
     })
     .then((updatedUser) => res.status(201).json(updatedUser))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.statusCode) {
+        return res.status(err.statusCode).send({ message: err.message });
+      }
+      return res.status(new InternalServerError().statusCode).send({ message: err.message });
+    });
 }
 
 function updateAvatar(req, res) {
@@ -102,7 +128,12 @@ function updateAvatar(req, res) {
       throw new NotFoundError("Usuário não encontrado");
     })
     .then((updatedAvatar) => res.status(201).json(updatedAvatar))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.statusCode) {
+        return res.status(err.statusCode).send({ message: err.message });
+      }
+      return res.status(new InternalServerError().statusCode).send({ message: err.message });
+    });
 }
 
 module.exports = {

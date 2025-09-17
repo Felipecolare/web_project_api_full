@@ -1,6 +1,7 @@
 const Card = require("../models/card");
 const NotFoundError = require("../errors/notFoundError");
 const BadRequest = require("../errors/badRequest");
+const InternalServerError = require("../errors/internalServerError");
 
 function createCard(req, res) {
   const { name, link } = req.body;
@@ -11,7 +12,12 @@ function createCard(req, res) {
 
   return Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(201).json(card))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.statusCode) {
+        return res.status(err.statusCode).send({ message: err.message });
+      }
+      return res.status(new InternalServerError().statusCode).send({ message: err.message });
+    });
 }
 
 function findCards(req, res) {
@@ -22,7 +28,12 @@ function findCards(req, res) {
       }
       return res.status(200).json(cards);
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.statusCode) {
+        return res.status(err.statusCode).send({ message: err.message });
+      }
+      return res.status(new InternalServerError().statusCode).send({ message: err.message });
+    });
 }
 
 function deleteCard(req, res) {
@@ -35,7 +46,12 @@ function deleteCard(req, res) {
     .then((card) =>
       res.status(200).send({ message: "Cartão deletado com sucesso" })
     )
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.statusCode) {
+        return res.status(err.statusCode).send({ message: err.message });
+      }
+      return res.status(new InternalServerError().statusCode).send({ message: err.message });
+    });
 }
 
 function likeCard(req, res) {
@@ -50,7 +66,12 @@ function likeCard(req, res) {
       throw new NotFoundError("Usuário não encontrado");
     })
     .then((card) => res.status(200).json(card))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.statusCode) {
+        return res.status(err.statusCode).send({ message: err.message });
+      }
+      return res.status(new InternalServerError().statusCode).send({ message: err.message });
+    });
 }
 
 function dislikeCard(req, res) {
@@ -64,7 +85,12 @@ function dislikeCard(req, res) {
       throw new NotFoundError("Usuário não encontrado");
     })
     .then((card) => res.status(200).json(card))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.statusCode) {
+        return res.status(err.statusCode).send({ message: err.message });
+      }
+      return res.status(new InternalServerError().statusCode).send({ message: err.message });
+    });
 }
 
 module.exports = { createCard, findCards, deleteCard, likeCard, dislikeCard };
